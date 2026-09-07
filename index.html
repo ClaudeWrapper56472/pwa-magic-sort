@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- viewport-fit=cover so the bench colour reaches under the notch; the
+     safe-area insets in the stylesheet keep the controls out from under it. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12161e">
+<meta name="description" content="A liquid sorting puzzle. Pour until every tube holds one colour.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Decant">
+<title>Decant</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<main id="app">
+
+	<section id="menu-screen" class="screen menu">
+
+		<!-- Inline rather than a file: it is the only picture in the app, it has to
+		     recolour with the palette, and an SVG in the markup is one fewer
+		     request to make and one fewer thing to cache. -->
+		<svg class="hero" viewBox="0 0 240 150" role="img"
+			aria-label="Three tubes of coloured liquid, one being filled from above">
+			<defs>
+				<clipPath id="tube-a"><path d="M40 14v102a20 20 0 0 0 40 0V14Z"/></clipPath>
+				<clipPath id="tube-b"><path d="M100 14v102a20 20 0 0 0 40 0V14Z"/></clipPath>
+				<clipPath id="tube-c"><path d="M160 14v102a20 20 0 0 0 40 0V14Z"/></clipPath>
+			</defs>
+
+			<g clip-path="url(#tube-a)">
+				<rect x="40" y="60" width="40" height="38" fill="#f279cc"/>
+				<rect x="40" y="98" width="40" height="38" fill="#3ec8e8"/>
+			</g>
+			<g clip-path="url(#tube-b)">
+				<rect x="100" y="22" width="40" height="114" fill="#f4d35e"/>
+			</g>
+			<g clip-path="url(#tube-c)">
+				<rect x="160" y="98" width="40" height="38" fill="#8ede5a"/>
+			</g>
+
+			<g fill="none" stroke="rgba(255,255,255,0.32)" stroke-width="3">
+				<path d="M40 14v102a20 20 0 0 0 40 0V14"/>
+				<path d="M100 14v102a20 20 0 0 0 40 0V14"/>
+				<path d="M160 14v102a20 20 0 0 0 40 0V14"/>
+			</g>
+
+			<!-- Liquid arriving from off the top of the picture. -->
+			<rect x="176" y="0" width="8" height="34" rx="4" fill="#8ede5a"/>
+			<ellipse cx="180" cy="48" rx="4.5" ry="6" fill="#8ede5a"/>
+		</svg>
+
+		<h1>Decant</h1>
+		<p class="subtitle">Pour until every tube holds one colour.</p>
+		<button id="play-button" type="button" class="primary">Play level 1</button>
+		<!-- Shown only when the play button is offering a different level, so the
+		     menu says "carry on" once rather than twice. -->
+		<button id="furthest-button" type="button" hidden>Back to level 1</button>
+		<!-- Built from Ladder.DIFFICULTIES, so which level each one starts cannot
+		     drift from the ladder that decides the boards. -->
+		<div id="start-at" class="start-at"></div>
+		<button id="motion-button" type="button" class="quiet" aria-pressed="true">
+			Pour animation: on
+		</button>
+		<div id="menu-stats" class="stats"></div>
+	</section>
+
+	<section id="game-screen" class="screen game" hidden>
+
+		<header class="header-row">
+			<button id="back-button" type="button" class="corner">Menu</button>
+			<span id="level-label" class="level">Level 1</span>
+			<span id="time-label" class="time">0:00</span>
+		</header>
+
+		<!-- The rack takes whatever height is left over and sizes its tubes to fit
+		     it, so the header sits directly above the tubes and the toolbar
+		     directly below them however tall the screen is. -->
+		<div id="rack" class="rack"></div>
+
+		<p class="tally">
+			<span id="progress-label">0 / 3 colours sorted</span>
+			<span id="moves-label">0 pours</span>
+		</p>
+
+		<!-- Pinned to the bottom edge rather than stacked with the rack. Controls
+		     belong where the thumb rests. -->
+		<div class="bottom-bar">
+			<p id="status-label" class="status" role="status" aria-live="polite"></p>
+			<div class="toolbar">
+				<button id="undo-button" type="button" disabled>Undo</button>
+				<button id="tube-button" type="button">Extra tube</button>
+				<button id="restart-button" type="button">Restart</button>
+			</div>
+		</div>
+
+		<div id="result-panel" class="overlay" hidden>
+			<div class="card">
+				<h2 id="result-title">Level done</h2>
+				<p id="result-detail"></p>
+				<button id="next-button" type="button" class="primary">Next level</button>
+				<button id="result-menu-button" type="button">Menu</button>
+			</div>
+		</div>
+
+	</section>
+
+</main>
+
+<script type="module" src="js/ui/main.js"></script>
+</body>
+</html>
